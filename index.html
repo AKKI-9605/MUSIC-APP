@@ -4,41 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEONPULSE // Premium Audio Player</title>
-    <!-- FontAwesome for Premium Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* ==========================================================================
-           THEME VARIABLES & BASE CONFIGS
-           ========================================================================== */
         :root {
             --bg-dark: #0a0b10;
             --panel-glass: rgba(18, 20, 32, 0.75);
             --border-glass: rgba(255, 255, 255, 0.08);
             --text-primary: #ffffff;
             --text-muted: #8a8eaf;
-            
             --neon-purple: #9d4edd;
             --neon-blue: #00f5d4;
             --neon-pink: #ff007f;
             --accent-gradient: linear-gradient(135deg, #ff007f 0%, #7b2cbf 50%, #00f5d4 100%);
-            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        .theme-synthwave {
-            --bg-dark: #12041d;
-            --panel-glass: rgba(30, 11, 42, 0.8);
-            --neon-purple: #ff71ce;
-            --neon-blue: #01cdfe;
-            --neon-pink: #b967ff;
-            --accent-gradient: linear-gradient(135deg, #ff71ce, #01cdfe);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: var(--font-stack);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-user-select: none;
             user-select: none;
         }
@@ -64,17 +50,10 @@
             top: 0; left: 0;
         }
 
-        .gradient-sphere {
-            position: absolute;
-            border-radius: 50%;
-        }
+        .gradient-sphere { position: absolute; border-radius: 50%; }
         .g1 { width: 500px; height: 500px; background: var(--neon-purple); top: -10%; left: -10%; }
         .g2 { width: 600px; height: 600px; background: var(--neon-pink); bottom: -20%; right: -10%; }
-        .g3 { width: 400px; height: 400px; background: var(--neon-blue); top: 40%; left: 50%; }
 
-        /* ==========================================================================
-           APP CONTAINER HOUSING
-           ========================================================================== */
         .app-container {
             display: flex;
             width: 92vw;
@@ -116,7 +95,6 @@
         .brand h2 { font-size: 20px; font-weight: 800; letter-spacing: 2px; }
         .brand h2 span { color: var(--neon-blue); }
 
-        /* Dual Input Systems Container */
         .upload-zone {
             border: 2px dashed rgba(255, 255, 255, 0.15);
             border-radius: 16px;
@@ -136,7 +114,6 @@
         .upload-zone p { font-size: 13px; font-weight: 500; }
         .upload-zone input { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; }
 
-        /* Streaming Input Box */
         .stream-box {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-glass);
@@ -150,17 +127,9 @@
             flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass);
             border-radius: 8px; padding: 8px 12px; color: white; font-size: 13px; outline: none;
         }
-        .stream-input-wrap input:focus { border-color: var(--neon-blue); }
         .stream-input-wrap button {
             background: var(--accent-gradient); border: none; color: white;
             padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 12px;
-        }
-
-        .search-box { position: relative; margin-bottom: 20px; }
-        .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-        .search-box input {
-            width: 100%; padding: 10px 14px 10px 42px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-glass); border-radius: 10px; color: white; font-size: 13px; outline: none;
         }
 
         .playlist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -186,56 +155,37 @@
 
         .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 150px; color: var(--text-muted); gap: 10px; }
 
-        /* ==========================================================================
-           MAIN PLAYER AREA
-           ========================================================================== */
         .player-main { flex: 1; display: flex; flex-direction: column; padding: 40px; justify-content: space-between; position: relative;}
         
-        .top-nav { display: flex; justify-content: space-between; align-items: center; z-index: 20; }
-        .theme-toggle {
-            display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.05);
-            padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-glass); cursor: pointer; font-size: 12px; font-weight: 600;
-        }
-        .fullscreen-toggle {
-            cursor: pointer; width: 36px; height: 36px; background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-glass);
-        }
-
         .visualizer-container { position: absolute; top: 10%; left: 5%; width: 90%; height: 40%; z-index: 1; pointer-events: none; }
         #visualizer { width: 100%; height: 100%; opacity: 0.5; }
 
         .now-playing-display { display: flex; flex-direction: column; align-items: center; text-align: center; margin: auto 0; z-index: 10; }
-        .album-art-wrapper { position: relative; margin-bottom: 20px; }
         .album-art {
             width: 200px; height: 200px; border-radius: 20px; background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 60px; color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 60px; color: rgba(255,255,255,0.1); margin-bottom: 20px;
         }
         .playing .album-art { color: var(--neon-purple); border-color: var(--neon-purple); box-shadow: 0 0 30px rgba(157, 78, 221, 0.3); }
 
         .track-meta h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; max-width: 450px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .track-meta p { color: var(--text-muted); font-size: 14px; }
 
-        /* ==========================================================================
-           CONTROLS DOCK
-           ========================================================================== */
         .controls-dock { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-glass); padding: 20px; border-radius: 20px; z-index: 10; }
         .progress-container { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 15px; }
         .time-stamp { font-size: 12px; color: var(--text-muted); width: 45px; font-family: monospace; }
         .progress-bar-wrapper { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; position: relative; cursor: pointer; }
         .progress-fill { height: 100%; width: 0%; background: var(--accent-gradient); border-radius: 3px; }
         
-        .buttons-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .buttons-container { display: flex; justify-content: space-between; align-items: center; }
         .utility-controls { width: 50px; display: flex; }
         .core-controls { display: flex; align-items: center; gap: 20px; }
         .ctrl-btn { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .ctrl-btn:hover, .ctrl-btn.active { color: var(--text-primary); }
-        .ctrl-btn.active { color: var(--neon-blue); }
+        .ctrl-btn:hover { color: var(--text-primary); }
         
         .ctrl-btn.main-play { width: 50px; height: 50px; border-radius: 50%; background: white; color: black; font-size: 18px; }
-        .ctrl-btn.main-play:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 20px rgba(0, 245, 212, 0.5); }
+        .ctrl-btn.main-play:hover { background: var(--neon-blue); box-shadow: 0 0 20px rgba(0, 245, 212, 0.5); }
 
-        .accessory-rack { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; }
-        .volume-container { display: flex; align-items: center; gap: 10px; }
+        .volume-container { display: flex; align-items: center; gap: 10px; margin-top: 10px; justify-content: flex-end;}
         .volume-container input { -webkit-appearance: none; appearance: none; width: 80px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; outline: none; }
         .volume-container input::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%; background: white; cursor: pointer; }
 
@@ -250,11 +200,10 @@
         }
     </style>
 </head>
-<body class="theme-cyberpunk">
+<body>
     <div class="bg-gradients">
         <div class="gradient-sphere g1"></div>
         <div class="gradient-sphere g2"></div>
-        <div class="gradient-sphere g3"></div>
     </div>
 
     <div class="app-container">
@@ -265,25 +214,20 @@
                 <h2>NEON<span>PULSE</span></h2>
             </div>
 
-            <!-- SYSTEM 1: Upload Files -->
+            <!-- SYSTEM 1: Local Upload -->
             <div class="upload-zone">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <p>Upload Files (MP3, WAV)</p>
                 <input type="file" id="file-input" multiple accept="audio/*">
             </div>
 
-            <!-- SYSTEM 2: Stream From Web Box -->
+            <!-- SYSTEM 2: Web Stream -->
             <div class="stream-box">
                 <h4>Stream Web URL / YT</h4>
                 <div class="stream-input-wrap">
                     <input type="text" id="stream-input" placeholder="Paste link...">
                     <button id="stream-submit-btn">Load</button>
                 </div>
-            </div>
-
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="search-input" placeholder="Search playlist...">
             </div>
 
             <div class="playlist-header">
@@ -298,26 +242,17 @@
             </div>
         </aside>
 
-        <!-- MAIN WINDOW -->
+        <!-- MAIN MAIN -->
         <main class="player-main">
-            <header class="top-nav">
-                <div class="theme-toggle" id="theme-btn">
-                    <i class="fa-solid fa-palette"></i> <span>Aesthetic</span>
-                </div>
-                <div class="fullscreen-toggle" id="fullscreen-btn"><i class="fa-solid fa-expand"></i></div>
-            </header>
-
             <div class="visualizer-container">
                 <canvas id="visualizer"></canvas>
             </div>
 
             <div class="now-playing-display">
-                <div class="album-art-wrapper">
-                    <div class="album-art" id="main-art"><i class="fa-solid fa-music"></i></div>
-                </div>
+                <div class="album-art" id="main-art"><i class="fa-solid fa-music"></i></div>
                 <div class="track-meta">
                     <h1 id="main-title">NeonPulse Live Engine</h1>
-                    <p id="main-artist">Upload local music or paste web streams</p>
+                    <p id="main-artist">Upload music or paste links</p>
                 </div>
             </div>
 
@@ -331,24 +266,18 @@
                 </div>
 
                 <div class="buttons-container">
-                    <div class="utility-controls">
-                        <button id="shuffle-btn" class="ctrl-btn"><i class="fa-solid fa-shuffle"></i></button>
-                    </div>
+                    <div class="utility-controls"></div>
                     <div class="core-controls">
                         <button id="prev-btn" class="ctrl-btn"><i class="fa-solid fa-backward-step"></i></button>
                         <button id="play-btn" class="ctrl-btn main-play"><i class="fa-solid fa-play"></i></button>
                         <button id="next-btn" class="ctrl-btn"><i class="fa-solid fa-forward-step"></i></button>
                     </div>
-                    <div class="utility-controls" style="justify-content: flex-end;">
-                        <button id="repeat-btn" class="ctrl-btn"><i class="fa-solid fa-repeat"></i></button>
-                    </div>
+                    <div class="utility-controls"></div>
                 </div>
 
-                <div class="accessory-rack">
-                    <div class="volume-container">
-                        <i class="fa-solid fa-volume-high" id="volume-icon"></i>
-                        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.7">
-                    </div>
+                <div class="volume-container">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.7">
                 </div>
             </div>
         </main>
@@ -357,25 +286,19 @@
     <div class="toast-container" id="toast-container"></div>
     <audio id="audio-element" crossorigin="anonymous"></audio>
 
-    <!-- ==========================================================================
-       JAVASCRIPT ENGINE WITH FAIL-SAFES
-       ========================================================================== -->
     <script>
         class NeonPulsePlayer {
             constructor() {
                 this.tracks = [];
                 this.currentIndex = -1;
                 this.isPlaying = false;
-                this.isShuffle = false;
-                this.isRepeat = false;
-
                 this.audioCtx = null;
                 this.analyser = null;
 
                 this.initElements();
                 this.initEvents();
                 this.setupCanvas();
-                this.showToast("NeonPulse Connected Successfully!");
+                this.showToast("System Online");
             }
 
             initElements() {
@@ -383,23 +306,16 @@
                 this.playBtn = document.getElementById('play-btn');
                 this.prevBtn = document.getElementById('prev-btn');
                 this.nextBtn = document.getElementById('next-btn');
-                this.shuffleBtn = document.getElementById('shuffle-btn');
-                this.repeatBtn = document.getElementById('repeat-btn');
-                this.themeBtn = document.getElementById('theme-btn');
-                this.fullscreenBtn = document.getElementById('fullscreen-btn');
-                
                 this.progressWrapper = document.getElementById('progress-wrapper');
                 this.progressFill = document.getElementById('progress-fill');
                 this.timeCurrent = document.getElementById('time-current');
                 this.timeTotal = document.getElementById('time-total');
                 this.volumeSlider = document.getElementById('volume-slider');
-                
                 this.fileInput = document.getElementById('file-input');
                 this.streamInput = document.getElementById('stream-input');
                 this.streamSubmitBtn = document.getElementById('stream-submit-btn');
                 this.playlistContainer = document.getElementById('playlist-container');
                 this.trackCountLabel = document.getElementById('track-count');
-                
                 this.mainTitle = document.getElementById('main-title');
                 this.mainArtist = document.getElementById('main-artist');
                 this.nowPlayingDisplay = document.querySelector('.now-playing-display');
@@ -411,18 +327,6 @@
                 this.playBtn.addEventListener('click', () => this.togglePlay());
                 this.prevBtn.addEventListener('click', () => this.prevTrack());
                 this.nextBtn.addEventListener('click', () => this.nextTrack());
-                this.shuffleBtn.addEventListener('click', () => { this.isShuffle = !this.isShuffle; this.shuffleBtn.classList.toggle('active', this.isShuffle); });
-                this.repeatBtn.addEventListener('click', () => { this.isRepeat = !this.isRepeat; this.repeatBtn.classList.toggle('active', this.isRepeat); });
-                
-                this.themeBtn.addEventListener('click', () => {
-                    document.body.classList.toggle('theme-synthwave');
-                    this.showToast("Aesthetic Switched!");
-                });
-                
-                this.fullscreenBtn.addEventListener('click', () => {
-                    if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
-                    else document.exitFullscreen();
-                });
 
                 this.audio.addEventListener('timeupdate', () => {
                     if (!this.audio.duration) return;
@@ -430,7 +334,7 @@
                     this.timeCurrent.innerText = this.formatTime(this.audio.currentTime);
                 });
                 this.audio.addEventListener('loadedmetadata', () => this.timeTotal.innerText = this.formatTime(this.audio.duration));
-                this.audio.addEventListener('ended', () => this.isRepeat ? (this.audio.currentTime = 0, this.play()) : this.nextTrack());
+                this.audio.addEventListener('ended', () => this.nextTrack());
                 
                 this.progressWrapper.addEventListener('click', (e) => {
                     if (!this.audio.duration) return;
@@ -440,52 +344,41 @@
 
                 this.volumeSlider.addEventListener('input', (e) => this.audio.volume = e.target.value);
                 this.fileInput.addEventListener('change', (e) => this.handleFiles(e.target.files));
-                
                 this.streamSubmitBtn.addEventListener('click', () => this.handleWebStream());
-                this.search-input = document.getElementById('search-input');
-                this.search-input.addEventListener('input', (e) => this.filterPlaylist(e.target.value));
-
-                window.addEventListener('keydown', (e) => {
-                    if (document.activeElement.tagName === 'INPUT') return;
-                    if (e.code === 'Space') { e.preventDefault(); this.togglePlay(); }
-                });
                 window.addEventListener('resize', () => this.setupCanvas());
             }
 
             handleFiles(fileList) {
+                if (!fileList || fileList.length === 0) return;
                 Array.from(fileList).forEach(file => {
                     const trackUrl = URL.createObjectURL(file);
                     this.tracks.push({
-                        id: 'local_' + Math.random().toString(36).substr(2, 5),
                         title: file.name.replace(/\.[^/.]+$/, ""),
-                        artist: 'Local File',
+                        artist: 'Local Audio File',
                         url: trackUrl
                     });
                 });
                 this.renderPlaylist();
-                if (this.currentIndex === -1) this.selectTrack(0, false);
-                this.showToast(`Imported ${fileList.length} files!`);
+                if (this.currentIndex === -1) this.selectTrack(0, true);
+                this.showToast(`Loaded ${fileList.length} files`);
             }
 
             handleWebStream() {
                 let url = this.streamInput.value.trim();
-                if (!url) return alert("Paste a valid track URL first!");
+                if (!url) return;
 
                 let title = "Web Audio Stream";
-                
-                // YouTube Converter Processing Bypass Hook
                 if (url.includes('youtube.com') || url.includes('youtu.be')) {
                     let videoId = "";
                     if(url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split(/[?#]/)[0];
                     else videoId = url.split('v=')[1].split('&')[0];
                     url = `https://piper.com.de/api/yt-stream?id=${videoId}`;
-                    title = "YouTube Stream Deck";
+                    title = "YouTube Video Stream";
                 }
 
                 this.tracks.push({
-                    id: 'stream_' + Math.random().toString(36).substr(2, 5),
                     title: title,
-                    artist: 'Internet Stream Source',
+                    artist: 'Web Source',
                     url: url
                 });
 
@@ -494,17 +387,16 @@
                 this.selectTrack(this.tracks.length - 1, true);
             }
 
-            renderPlaylist(list = null) {
-                const target = list || this.tracks;
-                if(target.length === 0) {
+            renderPlaylist() {
+                if(this.tracks.length === 0) {
                     this.playlistContainer.innerHTML = '<div class="empty-state"><p>Playlist empty.</p></div>';
                     this.trackCountLabel.innerText = "0 tracks";
                     return;
                 }
-                this.trackCountLabel.innerText = `${target.length} track(s)`;
+                this.trackCountLabel.innerText = `${this.tracks.length} track(s)`;
                 this.playlistContainer.innerHTML = '';
                 
-                target.forEach((track, index) => {
+                this.tracks.forEach((track, index) => {
                     const active = index === this.currentIndex;
                     const row = document.createElement('div');
                     row.className = `track-row ${active ? 'active' : ''}`;
@@ -514,18 +406,8 @@
                             <div class="row-title">${track.title}</div>
                             <div class="row-artist">${track.artist}</div>
                         </div>
-                        <button class="delete-track-btn"><i class="fa-solid fa-trash-can"></i></button>
                     `;
-                    row.addEventListener('click', (e) => {
-                        if (e.target.closest('.delete-track-btn')) return;
-                        this.selectTrack(index, true);
-                    });
-                    row.querySelector('.delete-track-btn').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        this.tracks.splice(index, 1);
-                        if (this.currentIndex === index) this.audio.src = '';
-                        this.renderPlaylist();
-                    });
+                    row.addEventListener('click', () => this.selectTrack(index, true));
                     this.playlistContainer.appendChild(row);
                 });
             }
@@ -541,11 +423,6 @@
                 if (autostart) this.play();
             }
 
-            filterPlaylist(q) {
-                if(!q.trim()) return this.renderPlaylist();
-                this.renderPlaylist(this.tracks.filter(t => t.title.toLowerCase().includes(q.toLowerCase())));
-            }
-
             togglePlay() {
                 if (this.currentIndex === -1 && this.tracks.length > 0) return this.selectTrack(0, true);
                 if (this.currentIndex === -1) return;
@@ -553,14 +430,12 @@
             }
 
             play() {
-                // Highly stable dynamic visualizer audio system hook
                 if (!this.audioCtx) this.startVisualizerEngine();
-                
                 this.audio.play().then(() => {
                     this.isPlaying = true;
                     this.playBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
                     this.nowPlayingDisplay.classList.add('playing');
-                }).catch(() => this.showToast("Click track directly to start!"));
+                }).catch(e => console.log("Playback error managed safely."));
             }
 
             pause() {
@@ -572,7 +447,7 @@
 
             nextTrack() {
                 if(this.tracks.length === 0) return;
-                let next = this.isShuffle ? Math.floor(Math.random()*this.tracks.length) : this.currentIndex + 1;
+                let next = this.currentIndex + 1;
                 if (next >= this.tracks.length) next = 0;
                 this.selectTrack(next, true);
             }
@@ -603,11 +478,11 @@
                     const source = this.audioCtx.createMediaElementSource(this.audio);
                     source.connect(this.analyser);
                     this.analyser.connect(this.audioCtx.destination);
-                    this.analyser.fftSize = 64;
+                    this.analyser.fftSize = 32;
                     this.bufferLength = this.analyser.frequencyBinCount;
                     this.dataArray = new Uint8Array(this.bufferLength);
                     this.renderVisuals();
-                } catch(e) { console.log("Visualizer connection bypassed for security limits."); }
+                } catch(e) { console.log("Visualizer connection bypassed."); }
             }
 
             renderVisuals() {
@@ -619,9 +494,9 @@
                 const barWidth = this.canvas.width / this.bufferLength;
                 let x = 0;
                 for(let i=0; i<this.bufferLength; i++) {
-                    let h = this.dataArray[i] * 0.8;
-                    this.canvasCtx.fillStyle = `rgba(157, 78, 221, ${h/255 + 0.2})`;
-                    this.canvasCtx.fillRect(x, this.canvas.height - h, barWidth - 4, h);
+                    let h = this.dataArray[i] * 0.6;
+                    this.canvasCtx.fillStyle = `rgba(157, 78, 221, ${h/255 + 0.15})`;
+                    this.canvasCtx.fillRect(x, this.canvas.height - h, barWidth - 6, h);
                     x += barWidth;
                 }
             }
