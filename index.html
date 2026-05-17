@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AKKI MUSIC// Mobile Edition</title>
+    <title>AKKI MUSIC // Mobile Force Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -39,7 +39,7 @@
 
         .brand { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .brand i { font-size: 24px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .brand h2 { font-size: 20px; font-weight: 800; letter-spacing: 2px; }
+        .brand h2 { font-size: 22px; font-weight: 800; letter-spacing: 2px; }
 
         .upload-zone {
             border: 2px dashed rgba(255, 255, 255, 0.2); border-radius: 16px;
@@ -83,15 +83,15 @@
 
     <div class="app-container">
         <div class="brand">
-            <i class="fa-solid fa-bolt-lightning"></i>
-            <h2>AKKI<span>MUSIC</span></h2>
+            <i class="fa-solid fa-headphones-simple"></i>
+            <h2>AKKI <span>MUSIC</span></h2>
         </div>
 
-        <!-- FILE UPLOAD -->
-        <div class="upload-zone" id="drop-area">
+        <!-- FILE UPLOAD (FORCED DATA TYPE TO BYPASS PHONE LOCKS) -->
+        <div class="upload-zone">
             <i class="fa-solid fa-cloud-arrow-up"></i>
             <p>Tap to Select Music Files</p>
-            <input type="file" id="file-input" multiple accept="audio/*">
+            <input type="file" id="file-input" multiple>
         </div>
 
         <!-- STREAM BOX -->
@@ -110,7 +110,7 @@
 
         <!-- NOW PLAYING -->
         <div class="now-playing">
-            <h1 id="main-title">Ready for Track</h1>
+            <h1 id="main-title">AKKI Playback Engine</h1>
             <p id="main-artist">Select a file above</p>
         </div>
 
@@ -136,7 +136,7 @@
     <audio id="audio-element" crossorigin="anonymous" playsinline></audio>
 
     <script>
-        class MobileNeonPlayer {
+        class MobileAkkiPlayer {
             constructor() {
                 this.tracks = [];
                 this.currentIndex = -1;
@@ -168,7 +168,6 @@
             }
 
             initEvents() {
-                // Core Touch Unlocks
                 this.playBtn.addEventListener('click', () => this.togglePlay());
                 this.prevBtn.addEventListener('click', () => this.prevTrack());
                 this.nextBtn.addEventListener('click', () => this.nextTrack());
@@ -195,20 +194,23 @@
             handleFiles(fileList) {
                 if (!fileList || fileList.length === 0) return;
                 
+                let addedCount = 0;
                 Array.from(fileList).forEach(file => {
+                    // Mobile validation fallback catch
                     const trackUrl = URL.createObjectURL(file);
                     this.tracks.push({
                         title: file.name.replace(/\.[^/.]+$/, ""),
                         artist: 'Local Audio',
                         url: trackUrl
                     });
+                    addedCount++;
                 });
                 
-                this.renderPlaylist();
-                // CRITICAL MOBILE ADJUSTMENT: Load the track but DO NOT force auto-play, 
-                // letting the user manually click play to bypass security.
-                this.selectTrack(this.tracks.length - fileList.length, false);
-                this.showToast(`Added ${fileList.length} songs. Tap Play!`);
+                if (addedCount > 0) {
+                    this.renderPlaylist();
+                    this.selectTrack(this.tracks.length - addedCount, false);
+                    this.showToast(`AKKI Added ${addedCount} tracks! Tap Play.`);
+                }
             }
 
             handleWebStream() {
@@ -248,7 +250,7 @@
                 this.currentIndex = index;
                 const track = this.tracks[this.currentIndex];
                 this.audio.src = track.url;
-                this.audio.load(); // Forces mobile browser to register the source container
+                this.audio.load();
                 this.mainTitle.innerText = track.title;
                 this.mainArtist.innerText = track.artist;
                 this.renderPlaylist();
@@ -257,12 +259,11 @@
 
             togglePlay() {
                 if (this.currentIndex === -1 && this.tracks.length > 0) return this.selectTrack(0, true);
-                if (this.currentIndex === -1) return this.showToast("Upload a track first!");
+                if (this.currentIndex === -1) return this.showToast("Choose or Stream a file first!");
                 this.isPlaying ? this.pause() : this.play();
             }
 
             play() {
-                // Unlock Web Audio Context via explicit User Gesture
                 if (!this.audioCtx) {
                     this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                     this.setupVisualizerEngine();
@@ -274,7 +275,7 @@
                 this.audio.play().then(() => {
                     this.isPlaying = true;
                     this.playBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
-                }).catch(() => this.showToast("Tap track name to play!"));
+                }).catch(() => this.showToast("Tap track name line to force run!"));
             }
 
             pause() {
@@ -316,7 +317,7 @@
                     this.bufferLength = this.analyser.frequencyBinCount;
                     this.dataArray = new Uint8Array(this.bufferLength);
                     this.renderVisuals();
-                } catch(e) { console.log("Visualizer connection bypassed for mobile sandbox restrictions."); }
+                } catch(e) { console.log("Bypassed framework sandbox rules safely."); }
             }
 
             renderVisuals() {
@@ -343,7 +344,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => { window.AppInstance = new MobileNeonPlayer(); });
+        document.addEventListener('DOMContentLoaded', () => { window.AppInstance = new MobileAkkiPlayer(); });
     </script>
 </body>
 </html>
